@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button eat="吃饭">路由跳转</button>
+    <script src="./index.js" type="module"></script>
+    <script>
+      const btn = document.querySelector("button");
+      btn.onclick = () => {
+        // fetch("http://111111");
+        // throw new Error("错误发生了");
+      };
+      window.addEventListener("unhandledrejection", (e) => {
+        console.log("我是reject", e);
+      });
+      window.addEventListener("error", (e) => {
+        console.log("我是error", e);
+      });
+    </script>
+  </body>
+</html>
