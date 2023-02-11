@@ -2,6 +2,14 @@
 title:手写埋点sdk包发布并在项目中使用 data:2023-2-11
 ---
 
+## 安装
+
+```
+pnpm add chovrio-track
+npm install chovrio-track
+cnpm install chovrio-track
+```
+
 ## 工具包的开发
 
 ### 项目基础结构搭建
@@ -15,13 +23,13 @@ title:手写埋点sdk包发布并在项目中使用 data:2023-2-11
 	pnpm add typescript -D # 语言
 	pnpm add rollup-plugin-dts -D
  	pnpm add rollup-plugin-typescript2 -D
- 	
+
 	pnpm add typescript rollup @types/node rollup-plugin-dts rollup-plugin-typescript2 -D # 一步安装
 ```
 
-安装好依赖后执行 ` npx tsc --init` 生成tsconfig.json文件
+安装好依赖后执行 ` npx tsc --init` 生成 tsconfig.json 文件
 
-手动创建rollup.config.js文件，并配置
+手动创建 rollup.config.js 文件，并配置
 
 ```js
 import path from "path";
@@ -55,7 +63,7 @@ export default [
         name: "Tracker",
         format: "umd",
       },
-        // 立即执行函数 这个没有什么必要
+      // 立即执行函数 这个没有什么必要
       {
         format: "iife",
         name: "Tracker",
@@ -73,10 +81,9 @@ export default [
     plugins: [dts()],
   },
 ];
-
 ```
 
-配置package.json文件的scripts脚本
+配置 package.json 文件的 scripts 脚本
 
 ```shell
 	pnpm pkg set scripts.build="rollup -c"
@@ -86,7 +93,7 @@ export default [
 
 ![image-20230211111631761](https://aesthetic-stroopwafel-621be5.netlify.app/tracker/image-20230211111631761.png)
 
-根据提示我们在package.json中 添加
+根据提示我们在 package.json 中 添加
 
 ```json
 {
@@ -100,7 +107,7 @@ export default [
 
 ![image-20230211111919039](https://aesthetic-stroopwafel-621be5.netlify.app/tracker/image-20230211111919039.png)
 
-所以我们将tsconfig.json中的 ` "module":"commanjs"`改为` "module":"ESNEXT"`
+所以我们将 tsconfig.json 中的 ` "module":"commanjs"`改为` "module":"ESNEXT"`
 
 再次打包就不会有报错了(注意在入口文件 core/index.ts 随便写点内容，不然空文件是打包不了的)
 
@@ -110,7 +117,7 @@ export default [
 
 ![image-20230211112201720](https://aesthetic-stroopwafel-621be5.netlify.app/tracker/image-20230211112201720.png)
 
-### SDK包开发
+### SDK 包开发
 
 首先我们在` types/index.ts`写入以下类型
 
@@ -140,7 +147,6 @@ export interface DefaultOptons {
 export interface Options extends Partial<DefaultOptons> {
   requestUrl: string;
 }
-
 ```
 
 在` core/index.ts`写入以下内容
@@ -180,38 +186,38 @@ export default class Tracker {
 }
 ```
 
-关于解析策略有一篇不错的文章 [tsconfig之moduleResolution详解](https://blog.csdn.net/weixin_40013817/article/details/127200965)
+关于解析策略有一篇不错的文章 [tsconfig 之 moduleResolution 详解](https://blog.csdn.net/weixin_40013817/article/details/127200965)
 
 也可以采用第二种解决办法，在根目录新建一个` type.d.ts`文件
 
 ```typescript
 // type.d.ts
 
-declare module '*.json' {
-    const value: any;
-    export default value;
+declare module "*.json" {
+  const value: any;
+  export default value;
 }
 ```
 
-这样我们也可以导入json文件，但是没有代码提示应该。
+这样我们也可以导入 json 文件，但是没有代码提示应该。
 
-但是rollup如果要打包json文件我们必须要借助插件。
+但是 rollup 如果要打包 json 文件我们必须要借助插件。
 
 ```shell
 	pnpm add @rollup/plugin-json -D
 ```
 
-并在rollup.config.js中配置，这里就不多做介绍了，直接引入配置即可
+并在 rollup.config.js 中配置，这里就不多做介绍了，直接引入配置即可
 
-因为浏览器有两种路由方式：`hash路由`和`普通路由`，hash路由就是带锚点的
+因为浏览器有两种路由方式：`hash路由`和`普通路由`，hash 路由就是带锚点的
 
 我们先写普通路由的埋点
 
 #### 普通路由监听
 
-##### SDK内容
+##### SDK 内容
 
-首先，在Tracker类里面新增两个个私有方法 `installTracker` 及 `captureEvents` 并在构造器中调用 `installTracker` 此时`core/index.ts`代码如下
+首先，在 Tracker 类里面新增两个个私有方法 `installTracker` 及 `captureEvents` 并在构造器中调用 `installTracker` 此时`core/index.ts`代码如下
 
 ```typescript
 import type { DefaultOptons, Options } from "../types/index";
@@ -253,7 +259,7 @@ export default class Tracker {
 }
 ```
 
-在这里我们监听了 `"pushState", "replaceState", "popstate"`三个事件(只要Tracker实例一旦创建)，就不做测试了，监听到了事件就得上报(可以做历史浏览记录)。所以我们Tracker类中新增一个上报函数 `reportTracker` 
+在这里我们监听了 `"pushState", "replaceState", "popstate"`三个事件(只要 Tracker 实例一旦创建)，就不做测试了，监听到了事件就得上报(可以做历史浏览记录)。所以我们 Tracker 类中新增一个上报函数 `reportTracker`
 
 ```typescript
 // core/index.ts
@@ -267,7 +273,7 @@ export default class Tracker {
   }
 ```
 
-该函数使用了Blob以及navigator.sendBeacon，简单说一下它们的作用，blob可以将数据转换成二进制流，转换后的数据与之前数据的对比图，这样在发送网络请求的时候就可以减少数据大小，提高请求速度(文件的分片上传也可以使用Blob)。navigator.sendBeacon也是为了上报提速的，同时可以保证会把数据发出去，不拖延卸载流程。这里有两篇文章，感兴趣的可以去看一看，[JS 中的 Navigator.sendBeacon() 是干什么的？](https://zhuanlan.zhihu.com/p/435549202)、[Javascript中Blob介绍](https://blog.csdn.net/yaojiqic/article/details/125090825)
+该函数使用了 Blob 以及 navigator.sendBeacon，简单说一下它们的作用，blob 可以将数据转换成二进制流，转换后的数据与之前数据的对比图，这样在发送网络请求的时候就可以减少数据大小，提高请求速度(文件的分片上传也可以使用 Blob)。navigator.sendBeacon 也是为了上报提速的，同时可以保证会把数据发出去，不拖延卸载流程。这里有两篇文章，感兴趣的可以去看一看，[JS 中的 Navigator.sendBeacon() 是干什么的？](https://zhuanlan.zhihu.com/p/435549202)、[Javascript 中 Blob 介绍](https://blog.csdn.net/yaojiqic/article/details/125090825)
 
 ![image-20230211121433794](https://aesthetic-stroopwafel-621be5.netlify.app/tracker/image-20230211121433794.png)
 
@@ -275,7 +281,7 @@ export default class Tracker {
 
 ##### 服务端代码
 
-我们在tracker文件夹同级新建一个server文件夹
+我们在 tracker 文件夹同级新建一个 server 文件夹
 
 ```shell
 	cd ..
@@ -283,7 +289,7 @@ export default class Tracker {
 	cd server
 	pnpm init
 	pnpm add nodemon -D
-	pnpm add koa @koa/cors koa-router 
+	pnpm add koa @koa/cors koa-router
 	pnpm pkg set scripts.start="nodemon index.js"
 ```
 
@@ -304,7 +310,6 @@ app.use(router.routes()).use(router.allowedMethods());
 app.listen(3000, () => {
   console.log("server running at http://localhost:3000");
 });
-
 ```
 
 写好服务端代码后直接`pnpm start`运行，然后新建测试文件夹
@@ -336,7 +341,6 @@ app.listen(3000, () => {
     </script>
   </body>
 </html>
-
 ```
 
 创建`index.js`
@@ -346,10 +350,9 @@ import Tracker from "../tracker/dist/index.js";
 new Tracker({
   historyTracker: true,
 });
-
 ```
 
-我们开始测试，发现当我们点击按钮进行路由跳转的时候，update请求并没有发出，当我们进行浏览器路由前进后退的时候，请求发出了，但是它们的事件类型都是popstate，replaceState和pushState事件都没有执行。为什么呢？因为window上没有这两个事件，所以我们得自定义事件。
+我们开始测试，发现当我们点击按钮进行路由跳转的时候，update 请求并没有发出，当我们进行浏览器路由前进后退的时候，请求发出了，但是它们的事件类型都是 popstate，replaceState 和 pushState 事件都没有执行。为什么呢？因为 window 上没有这两个事件，所以我们得自定义事件。
 
 ![image-20230211153929585](https://aesthetic-stroopwafel-621be5.netlify.app/tracker/image-20230211153929585.png)
 
@@ -395,11 +398,11 @@ export const createHistoryEvent = <T extends keyof History>(type: T) => {
 
 ![image-20230211155814402](https://aesthetic-stroopwafel-621be5.netlify.app/tracker/image-20230211155814402.png)
 
-普通路由埋点暂时over
+普通路由埋点暂时 over
 
-#### hash路由监听
+#### hash 路由监听
 
-**hash路由埋点实现就非常简单了**，因为`window`本身就拥有`hashChange`事件，并且因为只是锚点后内容的改变，浏览器并不会刷新,我们在`installTracker`函数中新增判断。重新打包
+**hash 路由埋点实现就非常简单了**，因为`window`本身就拥有`hashChange`事件，并且因为只是锚点后内容的改变，浏览器并不会刷新,我们在`installTracker`函数中新增判断。重新打包
 
 ```typescript
   private installTracker() {
@@ -418,11 +421,11 @@ export const createHistoryEvent = <T extends keyof History>(type: T) => {
 
 ![image-20230211160827461](https://aesthetic-stroopwafel-621be5.netlify.app/tracker/image-20230211160827461.png)
 
-#### dom事件监听
+#### dom 事件监听
 
 ##### 改写类型
 
-首先，我们要明确什么样的元素发生什么事件才产生埋点，所以我们修改`types/index.ts`下的 `DefaultOptions` 
+首先，我们要明确什么样的元素发生什么事件才产生埋点，所以我们修改`types/index.ts`下的 `DefaultOptions`
 
 ```typescript
 export interface DefaultOptons {
@@ -442,14 +445,14 @@ export interface DefaultOptons {
 然后我们在`installTracker`中新增判断
 
 ```typescript
-    if (this.data.domTracker) {
-      this.targetKeyReport();
-    }
+if (this.data.domTracker) {
+  this.targetKeyReport();
+}
 ```
 
 ##### 新增方法
 
-然后新增事件监听，这里的时间复杂度是O(n^2)，有些复杂，但是一般监听事件和监听类型不多
+然后新增事件监听，这里的时间复杂度是 O(n^2)，有些复杂，但是一般监听事件和监听类型不多
 
 ```typescript
   private targetKeyReport() {
@@ -474,7 +477,7 @@ export interface DefaultOptons {
   }
 ```
 
-重新打包一下再次测试 这里我们相当于监听了click事件，和发生事件元素身上是否存在eat属性
+重新打包一下再次测试 这里我们相当于监听了 click 事件，和发生事件元素身上是否存在 eat 属性
 
 ```js
 // index.js
@@ -487,7 +490,6 @@ const tracker = new Tracker({
   elementEvent: ["click"],
   elementKey: ["eat"],
 });
-
 ```
 
 ```html
@@ -510,7 +512,6 @@ const tracker = new Tracker({
     </script>
   </body>
 </html>
-
 ```
 
 ![image-20230211170511341](https://aesthetic-stroopwafel-621be5.netlify.app/tracker/image-20230211170511341.png)
@@ -521,7 +522,7 @@ const tracker = new Tracker({
 
 ##### 了解如何监听错误
 
-我们改写`index.html`文件内容如下，点击按钮即可产生错误并监听到。只要是在`promise`中捕获到的错误事件都是`unhandledrejection`，在这里使用fetch只是为了方便
+我们改写`index.html`文件内容如下，点击按钮即可产生错误并监听到。只要是在`promise`中捕获到的错误事件都是`unhandledrejection`，在这里使用 fetch 只是为了方便
 
 ```html
 <!DOCTYPE html>
@@ -550,7 +551,6 @@ const tracker = new Tracker({
     </script>
   </body>
 </html>
-
 ```
 
 ##### 监听错误
@@ -558,12 +558,12 @@ const tracker = new Tracker({
 我们在`installTracker`函数中新增判断`jsError`是否开启
 
 ```typescript
-    if (this.data.jsError) {
-      this.jsError();
-    }
+if (this.data.jsError) {
+  this.jsError();
+}
 ```
 
-再在Tracker中新增几个函数
+再在 Tracker 中新增几个函数
 
 ```typescript
   private errorEvent() {
@@ -628,7 +628,6 @@ app.use(router.routes()).use(router.allowedMethods());
 app.listen(3000, () => {
   console.log("server running at http://localhost:3000");
 });
-
 ```
 
 数据内容展示
