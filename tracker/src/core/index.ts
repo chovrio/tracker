@@ -21,12 +21,12 @@ class Tracker {
     };
   }
   private targetKeyReport() {
-    this.data.elementEvent?.forEach((event) => {
-      window.addEventListener(event, (e) => {
-        const target = e.target as HTMLElement;
-        this.data.elementKey?.forEach((key) => {
-          const targetKey = target.getAttribute(key);
-          if (targetKey)
+    if (this.data.element) {
+      for (const [keyTarget, event] of this.data.element) {
+        window.addEventListener(event, (e) => {
+          const target = e.target as HTMLElement;
+          const targetKey = target.getAttribute(keyTarget);
+          if (targetKey) {
             this.reportTracker({
               event,
               targetKey,
@@ -34,11 +34,14 @@ class Tracker {
                 code: 10003,
                 type: "dom",
                 message: "用户操作记录 ",
+                keyTarget,
+                targetKey,
               },
             });
+          }
         });
-      });
-    });
+      }
+    }
   }
   private captureEvents<T>(EventList: string[], targetKey: string, data?: T) {
     EventList.forEach((event) => {

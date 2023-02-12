@@ -17,11 +17,11 @@ export interface DefaultOptons {
   sdkVersion: string | number;
   extra: Record<string, any> | undefined;
   jsError: boolean;
-  elementEvent?: Array<keyof WindowEventMap>;
-  elementKey: Array<string>;
+  element?: ElementMap;
 }
 
 //必传参数 requestUrl
 export interface Options extends Partial<DefaultOptons> {
   requestUrl: string;
 }
+export type ElementMap = Map<string, keyof WindowEventMap>;

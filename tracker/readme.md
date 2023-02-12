@@ -20,8 +20,7 @@ const tracker = new Tracker({
   historyTracker: true, // 监听普通路由变化
   hashTracker: true, // 监听hash路由变化
   domTracker: true, // 监听dom事件
-  elementEvent: ["click"], // 监听dom事件的类型
-  elementKey: ["eat"], // 监听发生事件标签的属性，存在数组中的属性上报属性内容，不存在不上报
+  element: map, // 监听事件的map key是监听的属性 value是监听的事件 类型是ElementMap ts可导出
   jsError: true, // 监听错误事件
 });
 ```
