@@ -5,9 +5,9 @@
 **安装**
 
 ```shell
-npm install chovrio-tracker
-pnpm add chovrio-tracker
-cnpm install chovrio-tracker
+npm install chovrio-track
+pnpm add chovrio-track
+cnpm install chovrio-track
 ```
 
 **前端**
