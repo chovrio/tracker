@@ -15,6 +15,8 @@ cnpm install chovrio-track
 ```javascript
 // import Tracker from "./dist/index.esm.js";
 import Tracker from "./dist/index.js";
+const map = new Map();
+map.set("eat", "click");
 const tracker = new Tracker({
   requestUrl: "http://localhost:3000/tracker/update", // 埋点上报地址
   historyTracker: true, // 监听普通路由变化
