@@ -1,0 +1,13 @@
+lockfileVersion: 5.4
+
+specifiers:
+  chovrio-track: ^1.1.2
+
+dependencies:
+  chovrio-track: 1.1.2
+
+packages:
+
+  /chovrio-track/1.1.2:
+    resolution: {integrity: sha512-/490+hy/hsP5wZsnTW3bUAEr7yMnlvkXiR8Lgmw2qKisVbPCeJ6s9yFctxcsS+gs+5jWmqkX0bE2ZXV7Erz3OA==}
+    dev: false

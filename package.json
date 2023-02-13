@@ -1,1 +1,5 @@
-{}
+{
+  "dependencies": {
+    "chovrio-track": "^1.1.2"
+  }
+}

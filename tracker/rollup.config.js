@@ -2,6 +2,7 @@ import path from "path";
 import ts from "rollup-plugin-typescript2";
 import dts from "rollup-plugin-dts";
 import json from "@rollup/plugin-json";
+import terser from "@rollup/plugin-terser";
 import { fileURLToPath } from "node:url";
 const __filenameNew = fileURLToPath(import.meta.url);
 const __dirnameNew = path.dirname(__filenameNew);
@@ -12,7 +13,7 @@ export default [
     output: [
       // 打包生成esmodule规范js文件
       {
-        file: path.resolve(__dirnameNew, "./dist/index.js"),
+        file: path.resolve(__dirnameNew, "./dist/index.esm.js"),
         format: "es",
       },
       // 打包生成commanjs规范js文件
@@ -22,7 +23,7 @@ export default [
       },
       // 打包生成umd规范js文件
       {
-        file: path.resolve(__dirnameNew, "./dist/index.umd.js"),
+        file: path.resolve(__dirnameNew, "./dist/index.js"),
         // 全局变量名
         name: "Tracker",
         format: "umd",
@@ -34,7 +35,11 @@ export default [
         file: "./dist/index.iife.js",
       },
     ],
-    plugins: [ts(), json()],
+    plugins: [
+      ts({ compilerOptions: { lib: ["es5", "es6", "dom"], target: "es5" } }),
+      json(),
+      terser({ toplevel: true }),
+    ],
   },
   // 打包ts文件生成.d.ts文件
   {
