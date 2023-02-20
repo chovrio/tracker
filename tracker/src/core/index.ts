@@ -1,4 +1,4 @@
-import type { DefaultOptons, Options } from "../types/index";
+import type { DefaultOptons, Options, ElementMap } from "../types/index";
 import { version } from "../../package.json";
 import { createHistoryEvent } from "../utils/createEvent";
 
@@ -118,5 +118,15 @@ class Tracker {
     let blob = new Blob([JSON.stringify(params)], headers);
     navigator.sendBeacon(this.data.requestUrl, blob);
   }
+  public sendTracker<T>(data: T) {
+    this.reportTracker(data);
+  }
+  public setUser<T extends DefaultOptons["uuid"]>(uuid: T) {
+    this.data.uuid = uuid;
+  }
+  public setExtra<T extends DefaultOptons["extra"]>(extra: T) {
+    this.data.extra = extra;
+  }
 }
 export default Tracker;
+export { DefaultOptons, Options, ElementMap };

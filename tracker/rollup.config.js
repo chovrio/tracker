@@ -13,26 +13,13 @@ export default [
     output: [
       // 打包生成esmodule规范js文件
       {
-        file: path.resolve(__dirnameNew, "./dist/index.esm.js"),
+        file: path.resolve(__dirnameNew, "./dist/index.mjs"),
         format: "es",
       },
       // 打包生成commanjs规范js文件
       {
-        file: path.resolve(__dirnameNew, "./dist/index.cjs.js"),
+        file: path.resolve(__dirnameNew, "./dist/index.cjs"),
         format: "cjs",
-      },
-      // 打包生成umd规范js文件
-      {
-        file: path.resolve(__dirnameNew, "./dist/index.js"),
-        // 全局变量名
-        name: "Tracker",
-        format: "umd",
-      },
-      // 立即执行函数
-      {
-        format: "iife",
-        name: "Tracker",
-        file: "./dist/index.iife.js",
       },
     ],
     plugins: [
