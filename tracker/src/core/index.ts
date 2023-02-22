@@ -1,6 +1,6 @@
 import type { DefaultOptons, Options, ElementMap } from "../types/index";
-import { version } from "../../package.json";
 import { createHistoryEvent } from "../utils/createEvent";
+import { getTime } from "../utils/getTime";
 
 class Tracker {
   public data: Options;
@@ -17,7 +17,6 @@ class Tracker {
       hashTracker: false,
       domTracker: false,
       jsError: false,
-      sdkVersion: version,
     };
   }
   private targetKeyReport() {
@@ -111,7 +110,9 @@ class Tracker {
     this.promiseReject();
   }
   private reportTracker<T>(data: T) {
-    const params = Object.assign(this.data, data, { time: new Date() });
+    const params = Object.assign(this.data, data, {
+      time: getTime(new Date().getTime()),
+    });
     let headers = {
       type: "application/x-www-form-urlencoded",
     };
