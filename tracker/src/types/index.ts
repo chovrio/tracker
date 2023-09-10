@@ -14,6 +14,7 @@ export interface DefaultOptons {
   historyTracker: boolean;
   hashTracker: boolean;
   domTracker: boolean;
+  dataOnly: boolean;
   sdkVersion: string | number;
   extra: Record<string, any> | undefined;
   jsError: boolean;
