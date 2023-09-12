@@ -5,8 +5,58 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script>
+      (function () {
+        var hm = document.createElement('script');
+        hm.src = 'http://localhost:4000/hm.js?name=chovrio&only=1';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
   </head>
   <body>
-    <script src="./index.js" type="module"></script>
+    <button eat="吃饭">路由跳转</button>
+    <button eat="吃饭">报错</button>
+    <button eat="吃饭">再错</button>
+    <button
+      data-chovrio="{'name':'chovrio','age':'20', 'type':'eat', 'event':'click'}"
+    >
+      测试
+    </button>
+    <script>
+      const btn = document.querySelectorAll('button');
+      btn[0].onclick = () => {
+        history.pushState({ name: 'chovrio' }, 'test', '/');
+        // fetch("http://111111");
+        // throw new Error("错误发生了");
+      };
+      btn[1].onclick = () => {
+        throw new Error('错误发生了');
+      };
+      btn[2].onclick = () => {
+        fetch('http://111111')
+          .then((res) => {
+            console.log(res);
+            return true;
+          })
+          .catch((e) => {
+            console.log(e);
+            Promise.reject(e);
+          });
+      };
+      window.addEventListener('unhandledrejection', (e) => {
+        console.log('我是reject', e);
+      });
+      window.addEventListener('error', (e) => {
+        console.log('我是error', e);
+      });
+      let obj = { name: 'chovrio', age: '20', type: 'eat', event: 'click' };
+      // document.addEventListener('click', (e) => {
+      //   const json = JSON.parse(
+      //     e.target.getAttribute('data-chovrio').replace(/'/g, `"`)
+      //   );
+      //   console.log(json, typeof json);
+      // });
+    </script>
   </body>
 </html>

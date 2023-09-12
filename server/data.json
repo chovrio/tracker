@@ -1,0 +1,47 @@
+{
+  "users": {
+    "chovrio": {
+      "web-site": {
+        "http://127.0.0.1:5501/": {
+          "pv": 2,
+          "dataOnly": [
+            {
+              "name": "chovrio",
+              "time": "2023年9月10日 17:02:09",
+              "event": "click",
+              "targetKey": "data-only",
+              "message": {
+                "code": 10005,
+                "type": "data-only",
+                "message": "自定义事件 "
+              },
+              "data": {
+                "name": "chovrio",
+                "age": "20",
+                "type": "eat",
+                "event": "click"
+              }
+            },
+            {
+              "name": "chovrio",
+              "time": "2023年9月10日 17:01:31",
+              "event": "click",
+              "targetKey": "data-only",
+              "data": {
+                "data": {
+                  "code": 10005,
+                  "type": "data-only",
+                  "message": "自定义事件 "
+                },
+                "name": "chovrio",
+                "age": "20",
+                "type": "eat",
+                "event": "click"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
